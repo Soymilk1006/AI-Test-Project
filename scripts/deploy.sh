@@ -13,10 +13,7 @@ echo "📦 Building Lambda package..."
 
 # 2. Terraform workspace & apply
 cd terraform
-# Old line:
-terraform init -input=false
 
-# New lines:
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 AWS_REGION=${DEFAULT_AWS_REGION:-ap-southeast-2}
 terraform init -input=false \
