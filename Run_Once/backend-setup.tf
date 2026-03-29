@@ -1,6 +1,7 @@
 # This file creates the S3 bucket and DynamoDB table for Terraform state
 # Run this once per AWS account, then remove the file
 
+data "aws_caller_identity" "current" {}
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "twin-terraform-state-${data.aws_caller_identity.current.account_id}"
   
