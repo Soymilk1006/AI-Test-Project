@@ -88,3 +88,28 @@ Open `http://localhost:3000`.
 - Terraform state is managed in the configured backend.
 - The backend Lambda package is built before Terraform runs.
 - If you want a custom domain, enable the related Terraform variables and ensure Route53/ACM support.
+
+## Optional initial setup
+If you are setting up this project for the first time, there is a `Run_Once/` folder that can create shared AWS resources for the Terraform backend and GitHub Actions OIDC trust.
+
+1. Change into the folder:
+
+```bash
+cd Run_Once
+```
+
+2. Initialize Terraform:
+
+```bash
+terraform init
+```
+
+3. Apply the setup once:
+
+```bash
+terraform apply -target=aws_s3_bucket.terraform_state -target=aws_s3_bucket_versioning.terraform_state -target=aws_s3_bucket_server_side_encryption_configuration.terraform_state -target=aws_s3_bucket_public_access_block.terraform_state -target=aws_dynamodb_table.terraform_locks
+
+terraform apply -target=aws_iam_openid_connect_provider.github -target=aws_iam_role.github_actions -target=aws_iam_role_policy_attachment.github_lambda -target=aws_iam_role_policy_attachment.github_s3 -target=aws_iam_role_policy_attachment.github_apigateway -target=aws_iam_role_policy_attachment.github_cloudfront -target=aws_iam_role_policy_attachment.github_iam_read -target=aws_iam_role_policy_attachment.github_bedrock -target=aws_iam_role_policy_attachment.github_dynamodb -target=aws_iam_role_policy_attachment.github_acm -target=aws_iam_role_policy_attachment.github_route53 -target=aws_iam_role_policy.github_additional -var="github_repository=Your_github_account_name/Your_project_name"
+```
+
+That folder is intended for one-time bootstrap resources only and may be removed or ignored after the shared backend and OIDC role are created.
